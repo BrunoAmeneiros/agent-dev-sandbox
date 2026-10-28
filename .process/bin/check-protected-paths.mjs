@@ -2,10 +2,12 @@
 // Protected-path check for CI, and approval helper for the person.
 //
 //   node .process/bin/check-protected-paths.mjs [--base <ref>]
-//       CI: fails if a protected file changed against the merge base with
-//       <ref> (default origin/<integrationBranch>) and its content is not the
+//       Fails if a protected file changed against the merge base with <ref>
+//       (default origin/<integrationBranch>) and its content is not the
 //       approved one recorded in .process/config.json, or if an approved file
-//       does not match its hash. Changes to config.json itself are reported.
+//       does not match its hash. It checks the working tree, so uncommitted
+//       changes and deletions count too (in CI the working tree is HEAD).
+//       Changes to config.json itself are reported.
 //
 //   node .process/bin/check-protected-paths.mjs --approve <path>...
 //       Records the current content of each path as approved (a missing path
@@ -18,12 +20,9 @@ import { CONFIG_PATH, contentHash, isProtected, loadConfig, saveApprovedFiles, t
 
 const git = (root, args) => execFileSync('git', args, { cwd: root, stdio: ['ignore', 'pipe', 'pipe'], maxBuffer: 64 * 1024 * 1024 });
 const gitText = (root, args) => git(root, args).toString('utf8').replace(/\s+$/, '');
-const atHead = (root, rel) => {
-  try {
-    return git(root, ['show', `HEAD:${rel}`]);
-  } catch {
-    return null;
-  }
+const inWorkingTree = (root, rel) => {
+  const file = path.join(root, rel);
+  return fs.existsSync(file) && fs.statSync(file).isFile() ? fs.readFileSync(file) : null;
 };
 
 const args = process.argv.slice(2);
@@ -57,13 +56,20 @@ function approve(paths) {
 
 function check(baseRef) {
   const base = gitText(root, ['merge-base', baseRef, 'HEAD']);
-  const changed = gitText(root, ['diff', '--name-status', '--no-renames', base, 'HEAD'])
+  // Merge base against the working tree (tracked files), plus untracked files.
+  const changed = gitText(root, ['diff', '--name-status', '--no-renames', base])
     .split('\n')
     .filter(Boolean)
     .map((l) => {
       const [status, p] = l.split('\t');
       return { status: status[0], path: p };
-    });
+    })
+    .concat(
+      gitText(root, ['ls-files', '--others', '--exclude-standard'])
+        .split('\n')
+        .filter(Boolean)
+        .map((p) => ({ status: 'A', path: p })),
+    );
 
   const violations = [];
   const checked = new Set();
@@ -71,7 +77,7 @@ function check(baseRef) {
     if (checked.has(rel)) return;
     checked.add(rel);
     const approved = cfg.protected.files[rel];
-    const content = atHead(root, rel);
+    const content = inWorkingTree(root, rel);
     if (content === null) {
       if (approved !== null) violations.push(`${rel}: deleted without approval`);
     } else if (approved === undefined) {
