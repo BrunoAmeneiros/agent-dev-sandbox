@@ -1,0 +1,82 @@
+# Process gates (agent-dev-process). Copy to .github/workflows/ci.yml.
+# Default stack: Java + Maven. The mapper adapts the commands to the project
+# from docs/project-map.md; lines marked ADAPT are the usual places.
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: ['feature/**', 'bugfix/**', 'hotfix/**']
+
+permissions:
+  contents: read
+
+jobs:
+  protected-paths:
+    # Must be a required status check (see templates/ci/README.md).
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Protected paths changed only with approval
+        run: |
+          BASE="${{ github.base_ref }}"
+          if [ -z "$BASE" ]; then BASE="$(node -p "require('./.process/config.json').integrationBranch || 'develop'")"; fi
+          node .process/bin/check-protected-paths.mjs --base "origin/$BASE"
+
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21' # ADAPT
+          cache: maven
+      # Unit and integration tests; Testcontainers uses the runner's Docker.
+      - name: Tests
+        run: mvn -B verify # ADAPT
+      # Acceptance tests in tests/acceptance/ (e.g. a Failsafe profile).
+      - name: Acceptance tests
+        run: mvn -B verify -Pacceptance # ADAPT
+      - name: Linter and static analysis
+        run: mvn -B checkstyle:check spotbugs:check # ADAPT
+      - name: Coverage of changed code (80 %)
+        if: github.event_name == 'pull_request'
+        run: |
+          pip install --quiet diff-cover
+          diff-cover target/site/jacoco/jacoco.xml --compare-branch="origin/${{ github.base_ref }}" --fail-under=80 # ADAPT
+
+  security:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21' # ADAPT
+          cache: maven
+      - uses: github/codeql-action/init@v3
+        with:
+          languages: java
+          build-mode: manual
+      - run: mvn -B -DskipTests package # ADAPT
+      - uses: github/codeql-action/analyze@v3
+
+  dependency-review:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/dependency-review-action@v4
+        with:
+          fail-on-severity: moderate

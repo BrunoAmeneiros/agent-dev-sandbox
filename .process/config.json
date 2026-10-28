@@ -1,0 +1,26 @@
+{
+  "integrationBranch": "develop",
+  "mainBranch": "main",
+  "branchPrefixes": [
+    "feature/",
+    "bugfix/",
+    "hotfix/"
+  ],
+  "protected": {
+    "patterns": [
+      ".process/config.json",
+      ".process/bin/**",
+      ".claude/**",
+      ".github/workflows/**"
+    ],
+    "normalizeCheckboxes": [
+      "docs/superpowers/plans/**"
+    ],
+    "files": {
+      ".github/workflows/ci.yml": "sha256:97ad3e8c48c4d4dc81c136087240ed52a391bc2f690c809fab74a878c8823dad",
+      ".process/bin/check-protected-paths.mjs": "sha256:fc2f18650badf04f2b058e0427965864bbeaf15b7c65f2b5954b26b35cd9a1d2",
+      ".process/bin/process-config.mjs": "sha256:9447554254c92fc683886c4d85ae9fe137624fe5b0a937ac89eb355a2a05a8f4",
+      "tests/acceptance/GreeterAcceptanceTest.java": "sha256:5f0b4b583af7a194bd9185a36735a3738b671100488da9cf21dab3b0f1744536"
+    }
+  }
+}
