@@ -9,6 +9,6 @@ class GreeterAcceptanceTest {
 
   @Test
   void greetingIncludesTheName() {
-    assertEquals("Hello, Ana!", new Greeter().greet("Ana"));
+    assertEquals("Hello, Luis!", new Greeter().greet("Luis"));
   }
 }

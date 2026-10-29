@@ -20,7 +20,7 @@
       ".github/workflows/ci.yml": "sha256:97ad3e8c48c4d4dc81c136087240ed52a391bc2f690c809fab74a878c8823dad",
       ".process/bin/check-protected-paths.mjs": "sha256:d1a72138b04df4ee80c999c9b7fcde0a7ff61003df2dd69bb285b582c1d76018",
       ".process/bin/process-config.mjs": "sha256:9447554254c92fc683886c4d85ae9fe137624fe5b0a937ac89eb355a2a05a8f4",
-      "tests/acceptance/GreeterAcceptanceTest.java": "sha256:c9c18d339306838491a23a2869830eca32a15cb5aba47d12b241fc6481309314"
+      "tests/acceptance/GreeterAcceptanceTest.java": "sha256:e313d847e6489d9931b8c5dff7be176062cd3ab435949c9195286380f61baf33"
     }
   }
 }
