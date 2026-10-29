@@ -3,10 +3,14 @@
 # from docs/project-map.md; lines marked ADAPT are the usual places.
 name: ci
 
+# Runs on every push, so the gates run during execution, before the PR exists
+# (it opens at closing). The results attach to the commit, so the PR sees them.
+# dependency-review needs a PR: it is in dependency-review.yml.
+# Job names are the required checks in templates/ci/branch-protection.json;
+# keep them in sync.
 on:
-  pull_request:
   push:
-    branches: ['feature/**', 'bugfix/**', 'hotfix/**']
+    branches: ['feature/**', 'bugfix/**', 'hotfix/**', develop, main] # ADAPT: integration branch
 
 permissions:
   contents: read
@@ -24,8 +28,7 @@ jobs:
           node-version: '22'
       - name: Protected paths changed only with approval
         run: |
-          BASE="${{ github.base_ref }}"
-          if [ -z "$BASE" ]; then BASE="$(node -p "require('./.process/config.json').integrationBranch || 'develop'")"; fi
+          BASE="$(node -p "require('./.process/config.json').integrationBranch || 'develop'")"
           node .process/bin/check-protected-paths.mjs --base "origin/$BASE"
 
   build-and-test:
@@ -47,11 +50,13 @@ jobs:
         run: mvn -B verify -Pacceptance # ADAPT
       - name: Linter and static analysis
         run: mvn -B checkstyle:check spotbugs:check # ADAPT
+      # Against the integration branch; skipped on the integration branch and main.
       - name: Coverage of changed code (80 %)
-        if: github.event_name == 'pull_request'
         run: |
+          BASE="$(node -p "require('./.process/config.json').integrationBranch || 'develop'")"
+          if [ "$GITHUB_REF_NAME" = "$BASE" ] || [ "$GITHUB_REF_NAME" = main ]; then exit 0; fi
           pip install --quiet diff-cover
-          diff-cover target/site/jacoco/jacoco.xml --compare-branch="origin/${{ github.base_ref }}" --fail-under=80 # ADAPT
+          diff-cover target/site/jacoco/jacoco.xml --compare-branch="origin/$BASE" --fail-under=80 # ADAPT
 
   security:
     runs-on: ubuntu-latest
@@ -71,12 +76,3 @@ jobs:
           build-mode: manual
       - run: mvn -B -DskipTests package # ADAPT
       - uses: github/codeql-action/analyze@v3
-
-  dependency-review:
-    if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/dependency-review-action@v4
-        with:
-          fail-on-severity: moderate

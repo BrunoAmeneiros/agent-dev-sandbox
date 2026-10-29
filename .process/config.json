@@ -17,9 +17,10 @@
       "docs/superpowers/plans/**"
     ],
     "files": {
-      ".github/workflows/ci.yml": "sha256:97ad3e8c48c4d4dc81c136087240ed52a391bc2f690c809fab74a878c8823dad",
+      ".github/workflows/ci.yml": "sha256:188f39ce62c097019b5c078386d5dc58706099d5ada7d4d2a45262058bc1f25b",
+      ".github/workflows/dependency-review.yml": "sha256:2b4e2ca02bc3380733171a750e2ae78df1a2984343c99f1d647d42910e7d54ac",
       ".process/bin/check-protected-paths.mjs": "sha256:d1a72138b04df4ee80c999c9b7fcde0a7ff61003df2dd69bb285b582c1d76018",
-      ".process/bin/process-config.mjs": "sha256:9447554254c92fc683886c4d85ae9fe137624fe5b0a937ac89eb355a2a05a8f4",
+      ".process/bin/process-config.mjs": "sha256:9d2844879bc5beccab076326e5fc720563fe388585304b0fc08d3968b7a55b24",
       "tests/acceptance/GreeterAcceptanceTest.java": "sha256:27b1e67827347c07293f6629b58edb8741af28efccb31fb97495ea477f601a73"
     }
   }

@@ -22,8 +22,9 @@ export const DEFAULT_CONFIG = {
   usage: {
     // Skill invoked in the main session -> process phase.
     phases: {
-      'agent-dev-process:feature': 'need',
+      'agent-dev-process:feature': 'feature',
       'agent-dev-process:need': 'need',
+      'agent-dev-process:rails': 'rails',
       'superpowers:brainstorming': 'design',
       'superpowers:writing-plans': 'tasks',
       'superpowers:subagent-driven-development': 'execution',
