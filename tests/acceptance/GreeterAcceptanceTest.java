@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import sandbox.Greeter;
 
 /** Approved acceptance test: protected path, the implementer must not change it. */
-/** Prueba de edicion **/
+/** Prueba de edicion  **/
 class GreeterAcceptanceTest {
 
   @Test
