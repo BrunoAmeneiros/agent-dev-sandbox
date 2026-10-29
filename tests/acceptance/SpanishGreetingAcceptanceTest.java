@@ -1,0 +1,18 @@
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.Test;
+import sandbox.Greeter;
+
+/** Approved acceptance test: protected path, the implementer must not change it. */
+class SpanishGreetingAcceptanceTest {
+
+  @Test
+  void greetsInSpanishForSpanishClients() {
+    assertEquals("¡Hola, Ana!", new Greeter().greet("Ana", "es"));
+  }
+
+  @Test
+  void greetsInEnglishForEnglishClients() {
+    assertEquals("Hello, Ana!", new Greeter().greet("Ana", "en"));
+  }
+}
