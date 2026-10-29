@@ -1,0 +1,20 @@
+# Dependency review (agent-dev-process). Copy to .github/workflows/dependency-review.yml.
+# It compares the dependencies of the PR head with its base, so it only runs on
+# pull_request; the other gates are in ci.yml and run on push.
+# The job name is a required check in templates/ci/branch-protection.json.
+name: dependency-review
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  dependency-review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/dependency-review-action@v4
+        with:
+          fail-on-severity: moderate
