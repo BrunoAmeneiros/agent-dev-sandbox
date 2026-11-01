@@ -21,6 +21,7 @@
       ".github/workflows/dependency-review.yml": "sha256:2b4e2ca02bc3380733171a750e2ae78df1a2984343c99f1d647d42910e7d54ac",
       ".process/bin/check-protected-paths.mjs": "sha256:d1a72138b04df4ee80c999c9b7fcde0a7ff61003df2dd69bb285b582c1d76018",
       ".process/bin/process-config.mjs": "sha256:9d2844879bc5beccab076326e5fc720563fe388585304b0fc08d3968b7a55b24",
+      "docs/superpowers/specs/2026-11-01-4-informal-english-greeting-need.md": "sha256:5b02db6bcd255d08ea82765809bf92d2c0843aface7250afc64dcfae58e04676",
       "tests/acceptance/GreeterAcceptanceTest.java": "sha256:27b1e67827347c07293f6629b58edb8741af28efccb31fb97495ea477f601a73"
     }
   }
