@@ -10,6 +10,8 @@ export const CONFIG_PATH = '.process/config.json';
 export const DEFAULT_CONFIG = {
   integrationBranch: 'develop',
   mainBranch: 'main',
+  // Language the skills use until the person has written something.
+  language: 'es',
   branchPrefixes: ['feature/', 'bugfix/', 'hotfix/'],
   protected: {
     // Always protected, approved or not.
