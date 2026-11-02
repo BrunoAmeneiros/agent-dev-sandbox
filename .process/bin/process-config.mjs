@@ -1,6 +1,7 @@
 // Process configuration (.process/config.json), protected-path matching and
 // content hashing. Shared by the plugin hooks and by the CI check, which runs
 // a copy of this file from the project's .process/bin/. Node built-ins only.
+import { execFileSync } from 'node:child_process';
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -45,21 +46,44 @@ export const DEFAULT_CONFIG = {
   },
 };
 
+export const CONFLICT_REASON = 'config.json tiene un conflicto de merge sin resolver';
+const CONFLICT_MARKERS = /^(<{7}|={7}|>{7})(\s|$)/m;
+
+// The project's config merged over the defaults, or null if there is none.
+// With merge conflict markers, the HEAD version decides (conflict: true), so
+// the rails keep working until the person resolves it.
 export function loadConfig(root) {
   const file = path.join(root, CONFIG_PATH);
   if (!fs.existsSync(file)) return null;
-  const raw = JSON.parse(fs.readFileSync(file, 'utf8'));
+  let text = fs.readFileSync(file, 'utf8');
+  const conflict = CONFLICT_MARKERS.test(text);
+  if (conflict) {
+    try {
+      text = execFileSync('git', ['show', `HEAD:${CONFIG_PATH}`], { cwd: root, stdio: ['ignore', 'pipe', 'ignore'] }).toString('utf8');
+    } catch {
+      throw new Error(`${CONFLICT_REASON}, y HEAD no tiene versión con la que decidir: resuélvelo`);
+    }
+  }
+  const raw = JSON.parse(text);
   return {
     ...DEFAULT_CONFIG,
     ...raw,
     protected: { ...DEFAULT_CONFIG.protected, ...raw.protected, files: { ...(raw.protected?.files || {}) } },
     usage: { ...DEFAULT_CONFIG.usage, ...raw.usage },
+    conflict,
     _raw: raw,
   };
 }
 
+// Appended to a hook's reason while config.json is in conflict.
+export function conflictNote(cfg) {
+  return cfg?.conflict ? ` Aviso: ${CONFLICT_REASON}; se ha decidido con la versión de HEAD.` : '';
+}
+
 // Writes back only what the project file had, plus the approved hashes.
+// Never over a conflicted file: it would discard the merge.
 export function saveApprovedFiles(root, cfg) {
+  if (cfg.conflict) throw new Error(`${CONFLICT_REASON}: resuélvelo (y haz git add ${CONFIG_PATH}) antes de aprobar`);
   const raw = { ...cfg._raw, protected: { ...cfg._raw.protected, files: sortKeys(cfg.protected.files) } };
   const file = path.join(root, CONFIG_PATH);
   fs.writeFileSync(file, JSON.stringify(raw, null, 2) + '\n');
