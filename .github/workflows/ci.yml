@@ -1,6 +1,8 @@
 # Process gates (agent-dev-process). Copy to .github/workflows/ci.yml.
-# Default stack: Java + Maven. The mapper adapts the commands to the project
-# from docs/project-map.md; lines marked ADAPT are the usual places.
+# Default stack: Java + Maven. The lines marked ADAPT are adjusted to the
+# project when the rails are installed (/agent-dev-process:rails). The CI is
+# a protected path: any change to this file, then or later, is approved by
+# the person.
 name: ci
 
 # Runs on every push, so the gates run during execution, before the PR exists

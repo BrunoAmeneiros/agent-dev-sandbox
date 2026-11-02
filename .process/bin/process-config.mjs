@@ -36,6 +36,13 @@ export const DEFAULT_CONFIG = {
       'superpowers:systematic-debugging': 'execution',
       'superpowers:finishing-a-development-branch': 'closing',
     },
+    // Agent dispatched from the main session -> process phase. The first
+    // entry whose type matches, and whose match (regex on the description)
+    // matches if there is one, wins.
+    agentPhases: [
+      { type: 'agent-dev-process:mapper', match: '^Impact', phase: 'impact' },
+      { type: 'agent-dev-process:mapper', phase: 'map' },
+    ],
     // Subagent description (regex) -> role, for general-purpose subagents.
     roles: [
       { match: '^Implement Task', role: 'implementer' },
