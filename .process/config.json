@@ -22,7 +22,10 @@
       ".github/workflows/dependency-review.yml": "sha256:2b4e2ca02bc3380733171a750e2ae78df1a2984343c99f1d647d42910e7d54ac",
       ".process/bin/check-protected-paths.mjs": "sha256:d1a72138b04df4ee80c999c9b7fcde0a7ff61003df2dd69bb285b582c1d76018",
       ".process/bin/process-config.mjs": "sha256:743bbab087c183b1731ce5751686de2554bb9705708b25761e989cb9b8ccc539",
-      "tests/acceptance/GreeterAcceptanceTest.java": "sha256:27b1e67827347c07293f6629b58edb8741af28efccb31fb97495ea477f601a73"
+      "docs/superpowers/plans/2026-11-02-5-greet-null.md": "sha256:74af1e56ce732edb8d8394183802bb425d49f9dae3d43177c0dc6dca7e330099",
+      "docs/superpowers/specs/2026-11-02-5-triage.md": "sha256:dddbff215f51093dbcc360bd3c6fbe768093cd282d865d1b832855a9a78d21eb",
+      "tests/acceptance/GreeterAcceptanceTest.java": "sha256:27b1e67827347c07293f6629b58edb8741af28efccb31fb97495ea477f601a73",
+      "tests/acceptance/GreeterNullAcceptanceTest.java": "sha256:662a7d35bca6999816b95ff867b638b4f5d5170c0c3a581c7430bc152d28eca1"
     }
   }
 }
