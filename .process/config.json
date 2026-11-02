@@ -20,8 +20,8 @@
     "files": {
       ".github/workflows/ci.yml": "sha256:188f39ce62c097019b5c078386d5dc58706099d5ada7d4d2a45262058bc1f25b",
       ".github/workflows/dependency-review.yml": "sha256:2b4e2ca02bc3380733171a750e2ae78df1a2984343c99f1d647d42910e7d54ac",
-      ".process/bin/check-protected-paths.mjs": "sha256:d1a72138b04df4ee80c999c9b7fcde0a7ff61003df2dd69bb285b582c1d76018",
-      ".process/bin/process-config.mjs": "sha256:743bbab087c183b1731ce5751686de2554bb9705708b25761e989cb9b8ccc539",
+      ".process/bin/check-protected-paths.mjs": "sha256:f949b75639767487cd5a2733ef9326214d4424491184ec21d04286bbe58d41d4",
+      ".process/bin/process-config.mjs": "sha256:78a937b86f5c12bc5ab305222aa7c1b283ff5fcf9d7110972bae1d59157fdde4",
       "docs/superpowers/plans/2026-11-02-5-greet-null.md": "sha256:74af1e56ce732edb8d8394183802bb425d49f9dae3d43177c0dc6dca7e330099",
       "docs/superpowers/specs/2026-11-02-5-triage.md": "sha256:dddbff215f51093dbcc360bd3c6fbe768093cd282d865d1b832855a9a78d21eb",
       "tests/acceptance/GreeterAcceptanceTest.java": "sha256:27b1e67827347c07293f6629b58edb8741af28efccb31fb97495ea477f601a73",

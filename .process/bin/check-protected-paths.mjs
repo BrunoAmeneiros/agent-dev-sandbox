@@ -16,7 +16,7 @@
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
-import { CONFIG_PATH, contentHash, isProtected, loadConfig, saveApprovedFiles, toRel } from './process-config.mjs';
+import { CONFIG_PATH, CONFLICT_REASON, contentHash, isProtected, loadConfig, saveApprovedFiles, toRel } from './process-config.mjs';
 
 const git = (root, args) => execFileSync('git', args, { cwd: root, stdio: ['ignore', 'pipe', 'pipe'], maxBuffer: 64 * 1024 * 1024 });
 const gitText = (root, args) => git(root, args).toString('utf8').replace(/\s+$/, '');
@@ -40,6 +40,10 @@ function approve(paths) {
   if (!paths.length) {
     console.error('usage: check-protected-paths.mjs --approve <path>...');
     process.exit(2);
+  }
+  if (cfg.conflict) {
+    console.error(`${CONFLICT_REASON}: resuélvelo (y haz git add ${CONFIG_PATH}) antes de aprobar.`);
+    process.exit(1);
   }
   for (const p of paths) {
     const rel = toRel(root, path.resolve(process.cwd(), p));
