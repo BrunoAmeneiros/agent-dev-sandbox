@@ -1,7 +1,5 @@
 package sandbox;
 
-import java.io.FileDescriptor;
-import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
@@ -40,7 +38,7 @@ public final class GreetingCli {
     if (!result.stdout().isEmpty()) {
       if (result.utf8Stdout()) {
         PrintStream out =
-            new PrintStream(new FileOutputStream(FileDescriptor.out), false, StandardCharsets.UTF_8);
+            new PrintStream(System.out, false, StandardCharsets.UTF_8);
         out.println(result.stdout());
         out.flush();
       } else {
