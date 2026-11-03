@@ -76,6 +76,16 @@ class GreetingCliTest {
   }
 
   @Test
+  void trailingLangAfterUnknownCodeIsMissingValue() {
+    assertResult(
+        "",
+        "Missing value for --lang (supported: en, es)",
+        2,
+        false,
+        run("Ana", "--lang", "xx", "--lang"));
+  }
+
+  @Test
   void usageWithoutArguments() {
     assertResult(USAGE, "", 0, false, run());
   }
