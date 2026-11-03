@@ -13,7 +13,20 @@ public final class Greeter {
    * @throws NullPointerException if name is null
    */
   public String greet(String name) {
+    return greet(name, Language.EN);
+  }
+
+  /**
+   * Returns a greeting for the given name in the given language.
+   *
+   * @param name the name to greet
+   * @param language the language of the greeting
+   * @return the greeting, e.g. "Hello, Ana!" or "&iexcl;Hola, Ana!"
+   * @throws NullPointerException if name or language is null
+   */
+  public String greet(String name, Language language) {
     Objects.requireNonNull(name, "name");
-    return "Hello, " + name + "!";
+    Objects.requireNonNull(language, "language");
+    return language.greeting(name);
   }
 }
