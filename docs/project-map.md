@@ -10,7 +10,7 @@ Index for agents. Written by the mapper (agent-dev-process); update it with the 
 | All tests | `mvn -B verify -Pacceptance` | ~6 s |
 | One test | `mvn -B test -Dtest=GreeterTest#<method>` | acceptance: `mvn -B verify -Pacceptance -Dit.test=<Class>` |
 | Acceptance tests | `mvn -B verify -Pacceptance` | also runs unit tests |
-| Coverage | `mvn -B verify` | report: target/site/jacoco/jacoco.xml |
+| Coverage | `mvn -B verify` | report: target/site/jacoco/index.html and target/site/jacoco/jacoco.xml; CI needs 80 % on changed code (diff-cover) |
 | Lint / static analysis | `mvn -B checkstyle:check spotbugs:check` | |
 | Run | `java -cp target/classes sandbox.GreetingCli <name> [--shout]` | |
 
@@ -43,6 +43,7 @@ Java 21 (Temurin in CI), Maven 3.9. No services, no Docker, no environment varia
 ## Technical docs
 
 - [README](../README.md)
+- [CI workflow](../.github/workflows/ci.yml)
 
 ## Known failing tests
 
