@@ -77,6 +77,12 @@ class GreetingCliCharacterizationTest {
     assertEquals(line("HELLO, ANA!"), runMain("Ana", "--shout", "--shout"));
   }
 
+  /** Folded in from the bugfix 10 characterization: inner dashes do not make a flag. */
+  @Test
+  void nameWithInnerDashesIsStillAName() {
+    assertEquals(line("Hello, Ana-María!"), runMain("Ana-María"));
+  }
+
   @Test
   void printsUsageWithNoArguments() {
     assertUsage(runMain());
