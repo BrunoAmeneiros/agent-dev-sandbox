@@ -30,7 +30,7 @@ Java 21 (Temurin in CI), Maven 3.9. No services, no Docker, no environment varia
 | Zone | Path | Purpose | Tests |
 | --- | --- | --- | --- |
 | Greeter | src/main/java/sandbox/Greeter.java | Builds the greeting | src/test GreeterTest; tests/acceptance Greeter*AcceptanceTest |
-| CLI | src/main/java/sandbox/GreetingCli.java | Argument parsing, `--shout`, usage | none found at this commit |
+| CLI | src/main/java/sandbox/GreetingCli.java | Argument parsing, `--shout`, usage (a first argument starting with `--` prints the usage text, not a name) | src/test GreetingCliTest, GreetingCliCharacterizationTest; tests/acceptance FlagAsNameAcceptanceTest |
 | Process rails | .process/, .github/ | Protected paths, CI | none |
 
 ## Domain glossary
