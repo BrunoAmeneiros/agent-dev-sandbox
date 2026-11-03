@@ -14,7 +14,7 @@ class GreetingCliTest {
 
   private static final String USAGE = "Usage: greet <name> [--shout] [--lang en|es]";
   private static final String HINT = " (usage: greet <name> [--shout] [--lang en|es])";
-  private static final String HELLO_ANA_ES = "00a1Hola, Ana!";
+  private static final String HELLO_ANA_ES = "\u00a1Hola, Ana!";
 
   private static void assertResult(
       String stdout, String stderr, int exitCode, boolean utf8, CliResult actual) {
@@ -50,12 +50,12 @@ class GreetingCliTest {
 
   @Test
   void shoutsInSpanishLangFirst() {
-    assertResult("00a1HOLA, ANA!", "", 0, true, run("Ana", "--lang", "es", "--shout"));
+    assertResult("\u00a1HOLA, ANA!", "", 0, true, run("Ana", "--lang", "es", "--shout"));
   }
 
   @Test
   void shoutsInSpanishShoutFirst() {
-    assertResult("00a1HOLA, ANA!", "", 0, true, run("Ana", "--shout", "--lang", "es"));
+    assertResult("\u00a1HOLA, ANA!", "", 0, true, run("Ana", "--shout", "--lang", "es"));
   }
 
   @Test
@@ -113,11 +113,11 @@ class GreetingCliTest {
   @Test
   void spanishShoutKeepsAccents() {
     assertResult(
-        "00a1HOLA, JOS00c9!",
+        "\u00a1HOLA, JOS\u00c9!",
         "",
         0,
         true,
-        run("Jos00e9", "--lang", "es", "--shout"));
+        run("Jos\u00e9", "--lang", "es", "--shout"));
   }
 
   @Test
