@@ -13,14 +13,17 @@
 ## Global Constraints
 
 - No new dependencies; do not touch `pom.xml`.
-- Every call without `--lang` anywhere in the arguments: same stdout, same encoding (plain `System.out`), exit code 0, as today. Only the usage text changes.
+- Every call without `--lang` anywhere in the arguments: same stdout, same encoding (plain `System.out`), exit code 0, as today (today includes bugfix 10: a first argument that starts with `--` after `strip` prints the usage text). Only the usage text changes.
+- A call "has `--lang`" when `args[0].strip()` equals `--lang` or any of `args[1..]` equals `--lang`.
 - Non-ASCII characters in Java sources are written as Unicode escapes (`¡` = `\u00a1`); `pom.xml` sets no source encoding.
-- Protected, never edited by any Task: `src/test/java/sandbox/GreetingCliCharacterizationTest.java`, `tests/acceptance/SpanishGreetingAcceptanceTest.java`, `tests/acceptance/GreeterAcceptanceTest.java`, `tests/acceptance/GreeterNullAcceptanceTest.java`. If one of them seems wrong, stop and report; do not change it.
+- Protected, never edited by any Task: `src/test/java/sandbox/GreetingCliCharacterizationTest.java`, `tests/acceptance/SpanishGreetingAcceptanceTest.java`, `tests/acceptance/GreeterAcceptanceTest.java`, `tests/acceptance/GreeterNullAcceptanceTest.java`, `tests/acceptance/FlagAsNameAcceptanceTest.java`. If one of them seems wrong, stop and report; do not change it.
 - `Greeter.greet(String)` keeps its signature and behaviour (`Hello, <name>!`, `NullPointerException` with message `name`).
 - Exact texts:
   - usage: `Usage: greet <name> [--shout] [--lang en|es]`
   - unknown language: `Unknown language: <code> (supported: en, es)` (the code as typed)
   - missing value: `Missing value for --lang (supported: en, es)`
+  - missing name (with `--lang`, blank `args[0]`): `Missing name (usage: greet <name> [--shout] [--lang en|es])`
+  - name not first (with `--lang`, `args[0].strip()` starts with `--`): `The name must come first, got: <args[0].strip()> (usage: greet <name> [--shout] [--lang en|es])`
   - error exit code: `2`
 - Checkstyle (`checkstyle.xml`) and Javadoc on all public API; CI needs 80 % coverage on changed code.
 - Commands (from `docs/project-map.md`): one test `mvn -B test -Dtest=<Class>`; all tests `mvn -B verify -Pacceptance`; lint `mvn -B checkstyle:check spotbugs:check`.
@@ -32,13 +35,14 @@
 - `Ana --lang --shout`: the word after `--lang` is always its value, so this is the unknown-language error for `--shout`. Pinned in Task 3 (`langTakesNextWordEvenIfFlag`).
 - `José --lang es --shout`: `¡HOLA, JOSÉ!`, with the accent kept by `toUpperCase(Locale.ROOT)`. Pinned in Task 3 (`spanishShoutKeepsAccents`).
 - `Ana foo --lang es`: unknown words are still ignored when `--lang` is present, so this gives `¡Hola, Ana!`. Pinned in Task 3 (`unknownWordsIgnoredWithLang`).
+- Missing name: without `--lang` it is the usage text with exit 0 (today and bugfix 10); with `--lang` it is an error with exit 2. The name check runs before any `--lang` check, so `"   " --lang xx` is `Missing name`, not the unknown-language error. Pinned in Task 3 (`blankNameWithLangFails`, `blankNameBeatsUnknownLanguage`, `langBeforeNameFails`, `flagBeforeNameWithLangFails`, and the 6 migrated bugfix 10 cases).
 
 ---
 
 ### Task 1: Baseline: the protected tests on today's code
 
 **Files:**
-- Test (read only): `src/test/java/sandbox/GreetingCliCharacterizationTest.java`, `tests/acceptance/SpanishGreetingAcceptanceTest.java`
+- Test (read only): `src/test/java/sandbox/GreetingCliCharacterizationTest.java`, `tests/acceptance/SpanishGreetingAcceptanceTest.java`, `tests/acceptance/FlagAsNameAcceptanceTest.java`
 
 **Interfaces:**
 - Consumes: today's `GreetingCli.main(String[])`.
@@ -47,12 +51,12 @@
 - [ ] **Step 1: Run the characterization test on the current code**
 
 Run: `mvn -B test -Dtest=GreetingCliCharacterizationTest`
-Expected: `Tests run: 9, Failures: 0, Errors: 0`. If any of them fails, stop and report: the baseline is wrong, and it is not this Task's job to change the test.
+Expected: `Tests run: 10, Failures: 0, Errors: 0`. If any of them fails, stop and report: the baseline is wrong, and it is not this Task's job to change the test.
 
 - [ ] **Step 2: Record the acceptance baseline**
 
 Run: `mvn -B verify -Pacceptance`
-Expected: unit tests pass. `SpanishGreetingAcceptanceTest` has 3 tests: `greetsInEnglishWithoutLang` passes, and `greetsInSpanishWithLangEs` and `unknownLanguageFailsWithoutGreeting` fail (the feature does not exist yet). The other acceptance tests pass.
+Expected: unit tests pass. `SpanishGreetingAcceptanceTest` has 3 tests: `greetsInEnglishWithoutLang` passes, and `greetsInSpanishWithLangEs` and `unknownLanguageFailsWithoutGreeting` fail (the feature does not exist yet). The other acceptance tests pass, including the 4 in `FlagAsNameAcceptanceTest`.
 
 ### Task 2: `Language` and `Greeter.greet(String, Language)`
 
@@ -95,7 +99,7 @@ Each enum constant carries its greeting text, for example a prefix: `"Hello, "` 
 - [ ] **Step 4: Run the tests to verify they pass**
 
 Run: `mvn -B verify -Pacceptance`
-Expected: `LanguageTest`, `GreeterTest`, `GreetingCliCharacterizationTest`, `GreeterAcceptanceTest` and `GreeterNullAcceptanceTest` all pass. `SpanishGreetingAcceptanceTest` still fails on the same 2 tests as in Task 1.
+Expected: `LanguageTest`, `GreeterTest`, `GreetingCliTest`, `GreetingCliCharacterizationTest`, `GreeterAcceptanceTest`, `GreeterNullAcceptanceTest` and `FlagAsNameAcceptanceTest` all pass. `SpanishGreetingAcceptanceTest` still fails on the same 2 tests as in Task 1.
 
 - [ ] **Step 5: Commit**
 
@@ -108,7 +112,7 @@ git commit -m "feat: add Language and Spanish greeting to Greeter"
 
 **Files:**
 - Modify: `src/main/java/sandbox/GreetingCli.java`
-- Test: `src/test/java/sandbox/GreetingCliTest.java` (new)
+- Test: `src/test/java/sandbox/GreetingCliTest.java` (modify: it already exists from bugfix 10, with 6 tests that call `run` as a `String`)
 
 **Interfaces:**
 - Consumes: `Language.fromCode(String)`, `Language.ES`, `Greeter.greet(String, Language)`, `Greeter.greet(String)` (Task 2).
@@ -119,9 +123,11 @@ git commit -m "feat: add Language and Spanish greeting to Greeter"
 
 Parsing rules (these come from the spec; implement them exactly):
 
-1. With no arguments, or with `args[0].isBlank()`, `stdout` is the usage text and the exit code is 0.
-2. `name = args[0].strip()`.
-3. **If no element of `args[1..]` equals `"--lang"`**, apply today's rule: shout only if `args.length > 1 && "--shout".equals(args[1])`. Then `stdout` is `greet(name)`, upper-cased with `toUpperCase(Locale.ROOT)` if it shouts, the exit code is 0 and `utf8Stdout` is false.
+1. `name = args.length == 0 ? "" : args[0].strip()`. The call "has `--lang`" as defined in Global Constraints.
+2. **Missing name** (`name` is empty or starts with `"--"`):
+   - without `--lang`: `stdout` is the usage text, exit code 0 (today's rule and bugfix 10);
+   - with `--lang`: an error. If `name` is empty the message is "missing name", otherwise it is "name not first" with `name`. This check runs before any `--lang` parsing.
+3. **Without `--lang`**, apply today's rule: shout only if `args.length > 1 && "--shout".equals(args[1])`. Then `stdout` is `greet(name)`, upper-cased with `toUpperCase(Locale.ROOT)` if it shouts, the exit code is 0 and `utf8Stdout` is false.
 4. **Otherwise**, scan `args[1..]` from left to right:
    - `"--lang"` takes the next word as the code, whatever it is (the last one wins). If no word follows, the result is the error "missing value".
    - `"--shout"` anywhere else turns on shouting.
@@ -137,7 +143,7 @@ Parsing rules (these come from the spec; implement them exactly):
 
 - [ ] **Step 1: Write the failing tests**
 
-In `GreetingCliTest` (package `sandbox`), every test calls `GreetingCli.run(new String[] {...})` and checks all four fields of the `CliResult`. Use a helper `assertResult(String stdout, String stderr, int exitCode, boolean utf8, CliResult actual)`.
+In `GreetingCliTest` (package `sandbox`), every test calls `GreetingCli.run(new String[] {...})` and checks all four fields of the `CliResult`. Use a helper `assertResult(String stdout, String stderr, int exitCode, boolean utf8, CliResult actual)`. Keep the 6 bugfix 10 tests with their names and arguments, and change only their assertions to `CliResult` and the new usage text (the last 6 rows of the table). Then add the other rows. Update the class Javadoc to cover both bugfix 10 and Feature 9.
 
 | Test | args | stdout | stderr | exit | utf8 |
 | --- | --- | --- | --- | --- | --- |
@@ -158,11 +164,21 @@ In `GreetingCliTest` (package `sandbox`), every test calls `GreetingCli.run(new 
 | `langTakesNextWordEvenIfFlag` | `Ana --lang --shout` | `""` | `Unknown language: --shout (supported: en, es)` | 2 | false |
 | `spanishShoutKeepsAccents` | `Jos\u00e9 --lang es --shout` | `\u00a1HOLA, JOS\u00c9!` | `""` | 0 | true |
 | `unknownWordsIgnoredWithLang` | `Ana foo --lang es` | `\u00a1Hola, Ana!` | `""` | 0 | true |
+| `blankNameWithLangFails` | `"" --lang es` | `""` | `Missing name (usage: greet <name> [--shout] [--lang en\|es])` | 2 | false |
+| `blankNameBeatsUnknownLanguage` | `"   " --lang xx` | `""` | `Missing name (usage: greet <name> [--shout] [--lang en\|es])` | 2 | false |
+| `langBeforeNameFails` | `"  --lang  " es Ana` | `""` | `The name must come first, got: --lang (usage: greet <name> [--shout] [--lang en\|es])` | 2 | false |
+| `flagBeforeNameWithLangFails` | `--shout Ana --lang es` | `""` | `The name must come first, got: --shout (usage: greet <name> [--shout] [--lang en\|es])` | 2 | false |
+| `flagBeforeNamePrintsUsage` (bugfix 10) | `--shout Ana` | `Usage: greet <name> [--shout] [--lang en\|es]` | `""` | 0 | false |
+| `flagAlonePrintsUsage` (bugfix 10) | `--shout` | `Usage: greet <name> [--shout] [--lang en\|es]` | `""` | 0 | false |
+| `strippedFlagPrintsUsage` (bugfix 10) | `"  --shout  " Ana` | `Usage: greet <name> [--shout] [--lang en\|es]` | `""` | 0 | false |
+| `doubleDashAlonePrintsUsage` (bugfix 10) | `--` | `Usage: greet <name> [--shout] [--lang en\|es]` | `""` | 0 | false |
+| `singleDashIsStillAName` (bugfix 10) | `-x` | `Hello, -x!` | `""` | 0 | false |
+| `innerDoubleDashIsStillAName` (bugfix 10) | `Ana--` | `Hello, Ana--!` | `""` | 0 | false |
 
 - [ ] **Step 2: Run them to verify they fail**
 
 Run: `mvn -B test -Dtest=GreetingCliTest`
-Expected: compilation failure, because `CliResult` does not exist.
+Expected: compilation failure, because `CliResult` does not exist. (From here until Step 3 is done, `GreetingCliTest` does not compile; that is expected.)
 
 - [ ] **Step 3: Implement `CliResult`, `run(String[]) -> CliResult` and the new `main` in `GreetingCli.java`**
 
@@ -171,12 +187,12 @@ Follow the parsing rules and the `main` rules above. Update the class and method
 - [ ] **Step 4: Run the unit tests**
 
 Run: `mvn -B test -Dtest=GreetingCliTest+GreetingCliCharacterizationTest`
-Expected: `GreetingCliTest` 17/17 and `GreetingCliCharacterizationTest` 9/9 pass.
+Expected: `GreetingCliTest` 27/27 and `GreetingCliCharacterizationTest` 10/10 pass.
 
 - [ ] **Step 5: Run everything, including acceptance**
 
 Run: `mvn -B verify -Pacceptance`
-Expected: all tests pass, including the 3 in `SpanishGreetingAcceptanceTest`.
+Expected: all tests pass, including the 3 in `SpanishGreetingAcceptanceTest` and the 4 in `FlagAsNameAcceptanceTest`.
 
 - [ ] **Step 6: Run lint**
 
