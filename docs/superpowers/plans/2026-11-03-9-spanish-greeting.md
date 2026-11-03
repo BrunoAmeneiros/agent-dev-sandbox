@@ -48,12 +48,12 @@
 - Consumes: today's `GreetingCli.main(String[])`.
 - Produces: nothing. No code changes and no commit.
 
-- [ ] **Step 1: Run the characterization test on the current code**
+- [x] **Step 1: Run the characterization test on the current code**
 
 Run: `mvn -B test -Dtest=GreetingCliCharacterizationTest`
 Expected: `Tests run: 10, Failures: 0, Errors: 0`. If any of them fails, stop and report: the baseline is wrong, and it is not this Task's job to change the test.
 
-- [ ] **Step 2: Record the acceptance baseline**
+- [x] **Step 2: Record the acceptance baseline**
 
 Run: `mvn -B verify -Pacceptance`
 Expected: unit tests pass. `SpanishGreetingAcceptanceTest` has 3 tests: `greetsInEnglishWithoutLang` passes, and `greetsInSpanishWithLangEs` and `unknownLanguageFailsWithoutGreeting` fail (the feature does not exist yet). The other acceptance tests pass, including the 4 in `FlagAsNameAcceptanceTest`.
@@ -72,7 +72,7 @@ Expected: unit tests pass. `SpanishGreetingAcceptanceTest` has 3 tests: `greetsI
   - `public String greet(String name, Language language)` in `Greeter`. `EN` gives `Hello, <name>!` and `ES` gives `¡Hola, <name>!`. `name` is rejected with `requireNonNull(name, "name")` and `language` with `requireNonNull(language, "language")`, in that order.
   - `greet(String)` becomes `return greet(name, Language.EN);`.
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 `LanguageTest`:
 - `fromCodeFindsEnglish`: `assertEquals(Optional.of(Language.EN), Language.fromCode("en"))`
@@ -87,21 +87,21 @@ Expected: unit tests pass. `SpanishGreetingAcceptanceTest` has 3 tests: `greetsI
 - `rejectsNullNameWithLanguage`: `greet(null, Language.ES)` throws `NullPointerException` with message `"name"`
 - `rejectsNullLanguage`: `greet("Ana", null)` throws `NullPointerException` with message `"language"`
 
-- [ ] **Step 2: Run them to verify they fail**
+- [x] **Step 2: Run them to verify they fail**
 
 Run: `mvn -B test -Dtest=LanguageTest+GreeterTest`
 Expected: compilation failure, because `Language` does not exist.
 
-- [ ] **Step 3: Implement `Language` and `Greeter.greet(String, Language)`**
+- [x] **Step 3: Implement `Language` and `Greeter.greet(String, Language)`**
 
 Each enum constant carries its greeting text, for example a prefix: `"Hello, "` for `EN` and `"\u00a1Hola, "` for `ES`. The greeting is the prefix + name + `"!"`. Add Javadoc to the enum, its constants, `fromCode` and the new overload.
 
-- [ ] **Step 4: Run the tests to verify they pass**
+- [x] **Step 4: Run the tests to verify they pass**
 
 Run: `mvn -B verify -Pacceptance`
 Expected: `LanguageTest`, `GreeterTest`, `GreetingCliTest`, `GreetingCliCharacterizationTest`, `GreeterAcceptanceTest`, `GreeterNullAcceptanceTest` and `FlagAsNameAcceptanceTest` all pass. `SpanishGreetingAcceptanceTest` still fails on the same 2 tests as in Task 1.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/main/java/sandbox/Language.java src/main/java/sandbox/Greeter.java src/test/java/sandbox/LanguageTest.java src/test/java/sandbox/GreeterTest.java
@@ -141,7 +141,7 @@ Parsing rules (these come from the spec; implement them exactly):
 - If `stderr` is not empty, print it with `System.err.println`.
 - If `exitCode != 0`, call `System.exit(exitCode)`.
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 In `GreetingCliTest` (package `sandbox`), every test calls `GreetingCli.run(new String[] {...})` and checks all four fields of the `CliResult`. Use a helper `assertResult(String stdout, String stderr, int exitCode, boolean utf8, CliResult actual)`. Keep the 6 bugfix 10 tests with their names and arguments, and change only their assertions to `CliResult` and the new usage text (the last 6 rows of the table). Then add the other rows. Update the class Javadoc to cover both bugfix 10 and Feature 9.
 
@@ -175,31 +175,31 @@ In `GreetingCliTest` (package `sandbox`), every test calls `GreetingCli.run(new 
 | `singleDashIsStillAName` (bugfix 10) | `-x` | `Hello, -x!` | `""` | 0 | false |
 | `innerDoubleDashIsStillAName` (bugfix 10) | `Ana--` | `Hello, Ana--!` | `""` | 0 | false |
 
-- [ ] **Step 2: Run them to verify they fail**
+- [x] **Step 2: Run them to verify they fail**
 
 Run: `mvn -B test -Dtest=GreetingCliTest`
 Expected: compilation failure, because `CliResult` does not exist. (From here until Step 3 is done, `GreetingCliTest` does not compile; that is expected.)
 
-- [ ] **Step 3: Implement `CliResult`, `run(String[]) -> CliResult` and the new `main` in `GreetingCli.java`**
+- [x] **Step 3: Implement `CliResult`, `run(String[]) -> CliResult` and the new `main` in `GreetingCli.java`**
 
 Follow the parsing rules and the `main` rules above. Update the class and method Javadoc (`@param args` mentions `--lang`).
 
-- [ ] **Step 4: Run the unit tests**
+- [x] **Step 4: Run the unit tests**
 
 Run: `mvn -B test -Dtest=GreetingCliTest+GreetingCliCharacterizationTest`
 Expected: `GreetingCliTest` 27/27 and `GreetingCliCharacterizationTest` 10/10 pass.
 
-- [ ] **Step 5: Run everything, including acceptance**
+- [x] **Step 5: Run everything, including acceptance**
 
 Run: `mvn -B verify -Pacceptance`
 Expected: all tests pass, including the 3 in `SpanishGreetingAcceptanceTest` and the 4 in `FlagAsNameAcceptanceTest`.
 
-- [ ] **Step 6: Run lint**
+- [x] **Step 6: Run lint**
 
 Run: `mvn -B checkstyle:check spotbugs:check`
 Expected: `BUILD SUCCESS`. SpotBugs may report `DM_EXIT` for `System.exit` in `main`. If it does, stop and report it. Do not add exclusions or suppressions: that is a decision for the person.
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add src/main/java/sandbox/GreetingCli.java src/test/java/sandbox/GreetingCliTest.java
