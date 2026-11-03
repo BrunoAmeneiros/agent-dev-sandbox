@@ -9,7 +9,7 @@ public enum Language {
   /** English. */
   EN("Hello, "),
   /** Spanish. */
-  ES("¡Hola, ");
+  ES("\u00a1Hola, ");
 
   private final String prefix;
 

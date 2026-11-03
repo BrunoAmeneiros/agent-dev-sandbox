@@ -21,7 +21,7 @@ public final class Greeter {
    *
    * @param name the name to greet
    * @param language the language of the greeting
-   * @return the greeting, e.g. "Hello, Ana!" or "¡Hola, Ana!"
+   * @return the greeting, e.g. "Hello, Ana!" or "&iexcl;Hola, Ana!"
    * @throws NullPointerException if name or language is null
    */
   public String greet(String name, Language language) {

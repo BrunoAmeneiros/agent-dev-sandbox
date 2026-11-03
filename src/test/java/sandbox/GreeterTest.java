@@ -21,7 +21,7 @@ class GreeterTest {
 
   @Test
   void greetsInSpanish() {
-    assertEquals("¡Hola, Ana!", new Greeter().greet("Ana", Language.ES));
+    assertEquals("\u00a1Hola, Ana!", new Greeter().greet("Ana", Language.ES));
   }
 
   @Test
