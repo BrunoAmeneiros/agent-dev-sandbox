@@ -20,8 +20,8 @@
     "files": {
       ".github/workflows/ci.yml": "sha256:9ff1423677ef6aebe1de1c49b87291df8066da27941d3ba9719782e88c3c0247",
       ".github/workflows/dependency-review.yml": "sha256:2b4e2ca02bc3380733171a750e2ae78df1a2984343c99f1d647d42910e7d54ac",
-      ".process/bin/check-protected-paths.mjs": "sha256:f949b75639767487cd5a2733ef9326214d4424491184ec21d04286bbe58d41d4",
-      ".process/bin/process-config.mjs": "sha256:13538df3b43296f3aebd288b48caf704d6c4383d2e4f4664d4703148da14d2f1",
+      ".process/bin/check-protected-paths.mjs": "sha256:f21005b3fa05557f8d4d40d12130b3011915d9655f0abe8ea51ba9b547219565",
+      ".process/bin/process-config.mjs": "sha256:b20b3e19bfdb31705dab0f8cce2505a53434a58dbdb3a0fbbed49b87d4bc32ee",
       "docs/superpowers/plans/2026-11-02-5-greet-null.md": "sha256:74af1e56ce732edb8d8394183802bb425d49f9dae3d43177c0dc6dca7e330099",
       "docs/superpowers/plans/2026-11-03-10-flag-as-name.md": "sha256:b83ff9daba5dfc2af7b81d2dd7fea35361e74814b5726766cb19f22ab70a8e04",
       "docs/superpowers/plans/2026-11-03-9-spanish-greeting.md": "sha256:c9950520f9f4db29df53e72a2d6fb129103f205b159feadcfb3879da5c64de92",
