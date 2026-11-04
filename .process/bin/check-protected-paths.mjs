@@ -5,7 +5,8 @@
 //       Fails if a protected file changed against the merge base with <ref>
 //       (default origin/<integrationBranch>) and its content is not the
 //       approved one recorded in .process/config.json, or if an approved file
-//       does not match its hash. It checks the working tree, so uncommitted
+//       does not match its hash, or whose approval was withdrawn (an allowed
+//       change not approved yet). It checks the working tree, so uncommitted
 //       changes and deletions count too (in CI the working tree is HEAD).
 //       Changes to config.json itself are reported.
 //
@@ -16,7 +17,7 @@
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
-import { CONFIG_PATH, CONFLICT_REASON, contentHash, isProtected, loadConfig, saveApprovedFiles, toRel } from './process-config.mjs';
+import { CONFIG_PATH, CONFLICT_REASON, WITHDRAWN, contentHash, isProtected, loadConfig, saveApprovedFiles, toRel } from './process-config.mjs';
 
 const git = (root, args) => execFileSync('git', args, { cwd: root, stdio: ['ignore', 'pipe', 'pipe'], maxBuffer: 64 * 1024 * 1024 });
 const gitText = (root, args) => git(root, args).toString('utf8').replace(/\s+$/, '');
@@ -82,7 +83,9 @@ function check(baseRef) {
     checked.add(rel);
     const approved = cfg.protected.files[rel];
     const content = inWorkingTree(root, rel);
-    if (content === null) {
+    if (approved === WITHDRAWN) {
+      violations.push(`${rel}: approval withdrawn by a change, pending --approve`);
+    } else if (content === null) {
       if (approved !== null) violations.push(`${rel}: deleted without approval`);
     } else if (approved === undefined) {
       violations.push(`${rel}: changed, no approved hash`);
@@ -124,7 +127,10 @@ function configChanges(base) {
   diffList('pattern', before.protected?.patterns, after.protected?.patterns);
   const fa = before.protected?.files || {};
   const fb = after.protected?.files || {};
-  for (const k of Object.keys(fb)) if (fa[k] !== fb[k]) lines.push(`- approved: ${k}${fb[k] === null ? ' (deleted)' : ''}`);
+  for (const k of Object.keys(fb)) {
+    if (fa[k] === fb[k]) continue;
+    lines.push(fb[k] === WITHDRAWN ? `- approval withdrawn: ${k}` : `- approved: ${k}${fb[k] === null ? ' (deleted)' : ''}`);
+  }
   for (const k of Object.keys(fa)) if (!(k in fb)) lines.push(`- approval REMOVED: ${k}`);
   for (const k of ['integrationBranch', 'mainBranch']) if (before[k] !== after[k]) lines.push(`- ${k}: ${before[k]} -> ${after[k]}`);
   return lines.length > 1 ? lines : [`${CONFIG_PATH} changed (no protection settings changed).`];

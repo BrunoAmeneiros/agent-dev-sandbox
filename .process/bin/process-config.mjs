@@ -19,7 +19,11 @@ export const DEFAULT_CONFIG = {
     patterns: [CONFIG_PATH, '.process/bin/**', '.claude/**', '.github/workflows/**'],
     // Files whose task checkboxes are normalized to [ ] before hashing.
     normalizeCheckboxes: ['docs/superpowers/plans/**'],
-    // Approved files: repo-relative path -> content hash (null = approved deletion).
+    // Approved files that are documents (need, triage, design, plan). The
+    // rest of the approved files outside the patterns are tests.
+    documents: ['docs/superpowers/specs/**', 'docs/superpowers/plans/**'],
+    // Approved files: repo-relative path -> content hash (null = approved
+    // deletion, WITHDRAWN = approval withdrawn by an allowed change).
     files: {},
   },
   usage: {
@@ -52,6 +56,11 @@ export const DEFAULT_CONFIG = {
     ],
   },
 };
+
+// Recorded instead of a hash when the person allows a change to an approved
+// document or test: the change is allowed, the new content is not approved.
+// Only `check-protected-paths.mjs --approve` approves it again.
+export const WITHDRAWN = 'withdrawn';
 
 export const CONFLICT_REASON = 'config.json tiene un conflicto de merge sin resolver';
 const CONFLICT_MARKERS = /^(<{7}|={7}|>{7})(\s|$)/m;
@@ -133,6 +142,17 @@ export function globPrefix(glob) {
 
 export function isProtected(rel, cfg) {
   return Object.hasOwn(cfg.protected.files, rel) || matchesAny(rel, cfg.protected.patterns);
+}
+
+// How a protected path is approved:
+//   'rails'     always-protected paths (patterns): allowing a change approves it
+//   'document'  approved need, triage, design or plan: allowing a change
+//               withdraws its approval; while withdrawn, edits do not ask
+//   'test'      approved acceptance or characterization test: allowing a
+//               change withdraws its approval; every edit asks
+export function protectionKind(rel, cfg) {
+  if (matchesAny(rel, cfg.protected.patterns)) return 'rails';
+  return matchesAny(rel, cfg.protected.documents || []) ? 'document' : 'test';
 }
 
 // Hash of a file's content with line endings normalized to LF (git may check
