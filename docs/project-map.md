@@ -47,6 +47,7 @@ Java 21 (Temurin in CI), Maven 3.9. No services, no Docker, no environment varia
 ## Technical docs
 
 - [README](../README.md)
+- ADRs: [docs/adr/](adr/) (0001, 0002, 0003: abandoned Features)
 - [CI workflow](../.github/workflows/ci.yml)
 
 ## Known failing tests
