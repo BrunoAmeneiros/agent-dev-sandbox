@@ -28,6 +28,7 @@
       "docs/superpowers/plans/2026-11-02-5-greet-null.md": "sha256:74af1e56ce732edb8d8394183802bb425d49f9dae3d43177c0dc6dca7e330099",
       "docs/superpowers/plans/2026-11-03-10-flag-as-name.md": "sha256:b83ff9daba5dfc2af7b81d2dd7fea35361e74814b5726766cb19f22ab70a8e04",
       "docs/superpowers/plans/2026-11-03-9-spanish-greeting.md": "sha256:c9950520f9f4db29df53e72a2d6fb129103f205b159feadcfb3879da5c64de92",
+      "docs/superpowers/plans/2026-11-09-16-lang-equals-syntax.md": "sha256:6e3d1cb8eee28b877ef71dfbf803bc431cb8f4a683b0f742ba3a2a621357045d",
       "docs/superpowers/specs/2026-11-02-5-triage.md": "sha256:dddbff215f51093dbcc360bd3c6fbe768093cd282d865d1b832855a9a78d21eb",
       "docs/superpowers/specs/2026-11-03-10-triage.md": "sha256:21ea403858f063dec3f4d79f1d95d1d786d80ab47e87ab7b29073636f8a021ab",
       "docs/superpowers/specs/2026-11-03-9-spanish-greeting-design.md": "sha256:db885fdb7c40e532d1f9471f0c597fe3852677bbd04dd8aa3d8e60184edf06de",
@@ -35,10 +36,12 @@
       "docs/superpowers/specs/2026-11-09-16-lang-equals-syntax-design.md": "sha256:8e962668707b99e7c222db8903598dbab2ade405ad05d186e2651802dc0f6fc5",
       "docs/superpowers/specs/2026-11-09-16-lang-equals-syntax-need.md": "sha256:a8bd31d06db5d0b35fdac8e76a40855e3f139d7d266b11c70bc96dffdcf3be41",
       "src/test/java/sandbox/GreetingCliCharacterizationTest.java": "sha256:236c97cc6324726b5142be4e0724a1750c7df4154fc2e293bdccb176cef2d47c",
+      "src/test/java/sandbox/GreetingCliOptionsCharacterizationTest.java": "sha256:1d0a0c6b4e662eaf12d6b2d813ff6656b3429e07954f563590139ddce8ab0b9e",
       "tests/acceptance/FlagAsNameAcceptanceTest.java": "sha256:24926c511aefb8045ded0fa7b6d68f7d574a6d7620f2832e0929fd6a201c806d",
       "tests/acceptance/GreeterAcceptanceTest.java": "sha256:27b1e67827347c07293f6629b58edb8741af28efccb31fb97495ea477f601a73",
       "tests/acceptance/GreeterNullAcceptanceTest.java": "sha256:662a7d35bca6999816b95ff867b638b4f5d5170c0c3a581c7430bc152d28eca1",
-      "tests/acceptance/SpanishGreetingAcceptanceTest.java": "sha256:f2a0a690d1265cee75adf0ad471ae624d35bd71a5ff4d10892484d26ad33c903"
+      "tests/acceptance/SpanishGreetingAcceptanceTest.java": "sha256:f2a0a690d1265cee75adf0ad471ae624d35bd71a5ff4d10892484d26ad33c903",
+      "tests/acceptance/UnknownOptionAcceptanceTest.java": "sha256:d22b951a2d22a274368a42218fc5fe77e69334283a92d0f214b2e3175a35d47f"
     }
   }
 }
