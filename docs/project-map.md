@@ -12,7 +12,7 @@ Index for agents. Written by the mapper (agent-dev-process); update it with the 
 | Acceptance tests | `mvn -B verify -Pacceptance` | also runs unit tests |
 | Coverage | `mvn -B verify` | report: target/site/jacoco/index.html and target/site/jacoco/jacoco.xml; CI needs 80 % on changed code (diff-cover) |
 | Lint / static analysis | `mvn -B checkstyle:check spotbugs:check` | |
-| Run | `java -cp target/classes sandbox.GreetingCli <name> [--shout] [--lang <code>|--lang=<code>]` | Unknown `--` option: stderr `Unknown option: <arg> (supported: --lang <code>, --lang=<code>, --shout)`, exit 2 |
+| Run | `java -cp target/classes sandbox.GreetingCli <name> [--shout] [--lang <code>\|--lang=<code>]` | Unknown `--` option: stderr `Unknown option: <arg> (supported: --lang <code>, --lang=<code>, --shout)`, exit 2 |
 
 ## Environment
 
@@ -32,7 +32,7 @@ Java 21 (Temurin in CI), Maven 3.9. No services, no Docker, no environment varia
 | --- | --- | --- | --- |
 | Greeter | src/main/java/sandbox/Greeter.java | Builds the greeting; `greet(String)` and `greet(String, Language)` | src/test GreeterTest; tests/acceptance Greeter*AcceptanceTest |
 | Language | src/main/java/sandbox/Language.java | Supported languages (`EN`, `ES`), `fromCode` | src/test LanguageTest |
-| CLI | src/main/java/sandbox/GreetingCli.java | Argument parsing, `--shout`, `--lang <code>` and `--lang=<code>` (en|es), usage. Any argument starting with `--` that is not `--shout`, `--lang` or `--lang=<code>` fails in any position with `Unknown option: <arg> (supported: --lang <code>, --lang=<code>, --shout)`. Errors go to stderr with exit code 2 (unknown or missing language; with `--lang`, missing name or a flag before the name). UTF-8 stdout with `--lang es`. Without `--lang` behaviour is unchanged (bugfix 10 rule kept) | src/test GreetingCliTest, GreetingCliCharacterizationTest, GreetingCliOptionsCharacterizationTest; tests/acceptance FlagAsNameAcceptanceTest, SpanishGreetingAcceptanceTest, UnknownOptionAcceptanceTest |
+| CLI | src/main/java/sandbox/GreetingCli.java | Argument parsing, `--shout`, `--lang <code>` and `--lang=<code>` (en\|es), usage. Any argument starting with `--` that is not `--shout`, `--lang` or `--lang=<code>` fails in any position, also without `--lang` and in first position (including `--` alone and `--help`), with `Unknown option: <arg> (supported: --lang <code>, --lang=<code>, --shout)`. Errors go to stderr with exit code 2 (unknown or missing language; with `--lang`, missing name or a flag before the name). UTF-8 stdout with `--lang es`. Only a known flag in first position without `--lang` (e.g. `--shout Ana`) keeps the bugfix 10 rule (usage text, exit 0), and only when no later argument is an unknown option | src/test GreetingCliTest, GreetingCliCharacterizationTest, GreetingCliOptionsCharacterizationTest; tests/acceptance FlagAsNameAcceptanceTest, SpanishGreetingAcceptanceTest, UnknownOptionAcceptanceTest |
 | Process rails | .process/, .github/ | Protected paths, CI | none |
 
 ## Domain glossary
