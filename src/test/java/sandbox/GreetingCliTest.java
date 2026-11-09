@@ -7,8 +7,8 @@ import sandbox.GreetingCli.CliResult;
 
 /**
  * Tests of the command line parsing: bugfix 10 (a first argument starting with {@code --} is a
- * flag, not a name) and Feature 9 (the {@code --lang} option, the error exit code and the UTF-8
- * output flag).
+ * flag, not a name), Feature 9 (the {@code --lang} option, the error exit code and the UTF-8
+ * output flag) and Feature 16 ({@code --lang=<code>} and unknown options).
  */
 class GreetingCliTest {
 

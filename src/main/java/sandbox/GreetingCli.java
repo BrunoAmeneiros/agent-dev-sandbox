@@ -38,7 +38,7 @@ public final class GreetingCli {
    *     --lang=en|es}; any other argument after the name starting with {@code --} is an unknown
    *     option (an error); a first argument starting with {@code --} is not a name and prints the
    *     usage text (an error when {@code --lang} or {@code --lang=} is present, or when it is
-   *     itself an unknown option)
+   *     itself an unknown option, or when a later argument is an unknown option)
    */
   public static void main(String[] args) {
     CliResult result = run(args);
@@ -112,6 +112,7 @@ public final class GreetingCli {
     if (langError == null && language.isEmpty()) {
       langError = "Unknown language: " + code + " (supported: en, es)";
     }
+    // first problem left to right: the unknown option wins only if it comes before the last --lang
     if (unknown != null && (langError == null || unknownPos < langPos)) {
       return unknownOption(unknown);
     }
