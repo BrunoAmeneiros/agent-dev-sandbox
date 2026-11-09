@@ -97,7 +97,7 @@ Expected: all unit tests and the existing acceptance tests pass. In `UnknownOpti
 - Consumes: `Language.fromCode(String): Optional<Language>`, `Greeter.greet(String, Language)`, `Greeter.greet(String)`.
 - Produces: no new API. `static CliResult run(String[] args)` keeps its signature.
 
-- [ ] **Step 1: Write the failing tests in `GreetingCliTest`**
+- [x] **Step 1: Write the failing tests in `GreetingCliTest`**
 
 Use the existing `assertResult(stdout, stderr, exitCode, utf8, run(...))` helper and constants. Add `private static final String UNKNOWN = " (supported: --lang <code>, --lang=<code>, --shout)";` and `private static final String UNKNOWN_LANG = " (supported: en, es)";`. One test per design row not already covered by an existing test or a characterization test, named after the behaviour:
 
@@ -137,26 +137,26 @@ Use the existing `assertResult(stdout, stderr, exitCode, utf8, run(...))` helper
 
 Rows already pinned elsewhere and not repeated: 8, 14 (characterization), 15, 16, 19, 25 (existing tests and characterization). Delete `doubleDashAlonePrintsUsage`; no other existing test changes.
 
-- [ ] **Step 2: Run them to verify they fail**
+- [x] **Step 2: Run them to verify they fail**
 
 Run: `mvn -B test -Dtest=GreetingCliTest`
 Expected: the new tests fail, except four that already hold today and stay as guards: `emptyArgumentAfterNameIsIgnored`, `unknownLanguageBeforeUnknownOption`, `trailingLangAfterLangEqualsIsMissingValue` and `firstArgumentErrorBeatsUnknownOption`. `lastLangWinsAcrossForms` fails on its second call; `doubleDashAloneIsUnknownOption` fails.
 
-- [ ] **Step 3: Implement the rules in `GreetingCli.run(String[] args)`**
+- [x] **Step 3: Implement the rules in `GreetingCli.run(String[] args)`**
 
 Follow the Global Constraints rules 1–4 in one left-to-right scan. Add constants `LANG_EQUALS = "--lang="` and `UNKNOWN_OPTION_HINT = " (supported: --lang <code>, --lang=<code>, --shout)"`. Keep `USAGE`, `HINT` and every existing message unchanged. Update the Javadoc of `main` (the `@param args` text) for `--lang=<code>` and unknown options.
 
-- [ ] **Step 4: Run the unit tests, including characterization**
+- [x] **Step 4: Run the unit tests, including characterization**
 
 Run: `mvn -B test`
 Expected: all pass, including `GreetingCliCharacterizationTest` (10) and `GreetingCliOptionsCharacterizationTest` (5).
 
-- [ ] **Step 5: Run the acceptance tests and lint**
+- [x] **Step 5: Run the acceptance tests and lint**
 
 Run: `mvn -B verify -Pacceptance` then `mvn -B checkstyle:check spotbugs:check`
 Expected: all tests pass, including every method of `UnknownOptionAcceptanceTest`, `FlagAsNameAcceptanceTest` and `SpanishGreetingAcceptanceTest`; no checkstyle or spotbugs violations.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add src/main/java/sandbox/GreetingCli.java src/test/java/sandbox/GreetingCliTest.java
