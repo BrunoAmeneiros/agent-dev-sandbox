@@ -41,7 +41,7 @@ En la tabla, `UO` abrevia `Unknown option: <opción> (supported: --lang <code>, 
 | 18 | `--foo Ana` | Usage, 0 | UO con `--foo`, 2 | |
 | 18 | `--foo` | Usage, 0 | UO con `--foo`, 2 | |
 | 18 | `--` | Usage, 0 | UO con `--`, 2 | |
-| 18 | `  --foo  Ana` (blancos delante) | Usage, 0 | UO con `--foo`, 2 | los argumentos vacíos o en blanco no cambian el resultado |
+| 18 | `"  --foo  " Ana` | Usage, 0 | UO con `--foo`, 2 | un primer argumento con blancos alrededor de `--foo` se lee igualmente como la opción desconocida `--foo` |
 | 20 | `--foo Ana --lang es` | `The name must come first, got: --foo (usage: greet <name> [--shout] [--lang en\|es])`, 2 | UO con `--foo`, 2 | solo cambia el mensaje (salida 2 igual) |
 | 21 | `Ana --lang=--shout` | `Hello, Ana!`, 0 | `Unknown language: --shout (supported: en, es)`, 2 | el valor tras `=` se toma tal cual |
 | 22 | `Ana --lang=es --shout` | `Hello, Ana!`, 0 | `¡HOLA, ANA!`, 0 | |
