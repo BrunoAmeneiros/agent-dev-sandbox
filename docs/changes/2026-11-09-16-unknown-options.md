@@ -1,6 +1,6 @@
 # Cambios en la CLI `greet` (Feature 16): `--lang=<code>` y opciones desconocidas
 
-Para operaciones: lista de **todas** las llamadas cuyo resultado cambia respecto a la versión actual (`develop` 71bdbd7). Revisad vuestros scripts del kiosco contra esta tabla antes de publicar.
+Para operaciones: lista de todas las llamadas de la tabla de entradas del diseño cuyo resultado cambia, más cualquier otra opción `--` desconocida, como `--help`, respecto a la versión actual (`develop` 71bdbd7). Revisad vuestros scripts del kiosco contra esta tabla antes de publicar.
 
 ## Qué cambia
 
@@ -50,3 +50,12 @@ En la tabla, `UO` abrevia `Unknown option: <opción> (supported: --lang <code>, 
 | 23 | `--shout --foo` | Usage, 0 | UO con `--foo`, 2 | |
 | 24 | `"" --foo` | Usage, 0 | UO con `--foo`, 2 | |
 | 24 | `"   " Ana --foo` | Usage, 0 | UO con `--foo`, 2 | |
+
+## Otras opciones desconocidas: `--help`
+
+`--help` no es una opción conocida: sigue la regla general de opción desconocida (filas 10 y 18 del diseño). `UO` es el mensaje de la tabla de arriba.
+
+| Llamada | Hoy (salida, código) | Ahora (salida, código) |
+| --- | --- | --- |
+| `--help` | Usage, 0 | `Unknown option: --help (supported: --lang <code>, --lang=<code>, --shout)`, 2 |
+| `Ana --help` | `Hello, Ana!`, 0 | `Unknown option: --help (supported: --lang <code>, --lang=<code>, --shout)`, 2 |
