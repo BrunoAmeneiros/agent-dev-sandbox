@@ -63,12 +63,12 @@ Inputs the design does not list as rows; each follows from the rules above and i
 - Consumes: today's `GreetingCli`.
 - Produces: nothing. No code changes and no commit.
 
-- [ ] **Step 1: Run the characterization tests**
+- [x] **Step 1: Run the characterization tests**
 
 Run: `mvn -B test -Dtest="GreetingCliCharacterizationTest,GreetingCliOptionsCharacterizationTest"`
 Expected: `Tests run: 15, Failures: 0, Errors: 0` (10 + 5). If any fails, stop and report.
 
-- [ ] **Step 2: Record the acceptance baseline**
+- [x] **Step 2: Record the acceptance baseline**
 
 Run: `mvn -B verify -Pacceptance`
 Expected: all unit tests and the existing acceptance tests pass. In `UnknownOptionAcceptanceTest`, the guards `looseWordsStillIgnored` and `separateUnknownLanguageStillFails` pass and the other methods fail.
