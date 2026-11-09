@@ -68,6 +68,7 @@ class UnknownOptionAcceptanceTest {
 
     assertEquals(0, result.exitCode(), "stderr: " + result.stderr());
     assertArrayEquals(utf8Line("¡Hola, Ana!"), result.stdout());
+    assertEquals("", result.stderr(), "nothing on stderr");
   }
 
   /** Criterion 2: {@code --lang=xx} fails exactly like {@code --lang xx}. */
@@ -113,5 +114,6 @@ class UnknownOptionAcceptanceTest {
 
     assertEquals(0, result.exitCode(), "stderr: " + result.stderr());
     assertArrayEquals(utf8Line("Hello, Ana!"), result.stdout());
+    assertEquals("", result.stderr(), "nothing on stderr");
   }
 }
