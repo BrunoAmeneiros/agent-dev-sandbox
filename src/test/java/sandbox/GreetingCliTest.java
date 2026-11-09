@@ -309,8 +309,8 @@ class GreetingCliTest {
 
   @Test
   void langEqualsWithShout() {
-    assertResult("¡HOLA, ANA!", "", 0, true, run("Ana", "--lang=es", "--shout"));
-    assertResult("¡HOLA, ANA!", "", 0, true, run("Ana", "--shout", "--lang=es"));
+    assertResult("\u00a1HOLA, ANA!", "", 0, true, run("Ana", "--lang=es", "--shout"));
+    assertResult("\u00a1HOLA, ANA!", "", 0, true, run("Ana", "--shout", "--lang=es"));
   }
 
   @Test
