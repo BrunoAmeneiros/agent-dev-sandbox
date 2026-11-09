@@ -181,16 +181,16 @@ git commit -m "feat: accept --lang=<code> and reject unknown options"
 - Consumes: the behaviour delivered by Task 2.
 - Produces: the file linked from the PR.
 
-- [ ] **Step 1: Write the file**
+- [x] **Step 1: Write the file**
 
 In Spanish, like the other docs. Columns: `Llamada | Hoy (salida, código) | Ahora (salida, código) | Nota`. The "Hoy" values are the ones in the design's Despliegue section and its verification against `develop` (71bdbd7).
 
-- [ ] **Step 2: Check every "Ahora" value against the built CLI**
+- [x] **Step 2: Check every "Ahora" value against the built CLI**
 
 Run `mvn -B -DskipTests package`, then `java -cp target/classes sandbox.GreetingCli <args>` for each row of the table.
 Expected: each stdout/stderr and exit code matches the "Ahora" column exactly.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add docs/changes/2026-11-09-16-unknown-options.md
