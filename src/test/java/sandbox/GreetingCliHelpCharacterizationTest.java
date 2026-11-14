@@ -93,6 +93,16 @@ class GreetingCliHelpCharacterizationTest {
         "", "Unknown language: xx (supported: en, es)", 2, run("Ana", "--lang", "xx", "--foo"));
   }
 
+  /** Review case: in first-argument path a help right after --lang is its value. */
+  @Test
+  void helpAfterLangInFirstArgumentPathStillFailsOnTheName() {
+    assertResult(
+        "",
+        "The name must come first, got: --shout" + HINT,
+        2,
+        run("--shout", "--lang", "--lang", "--help"));
+  }
+
   /** Bugfix 10 usage text stays for a known flag in first position. */
   @Test
   void usageTextStaysForKnownFirstFlag() {
