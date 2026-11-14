@@ -46,6 +46,7 @@ export const DEFAULT_CONFIG = {
     agentPhases: [
       { type: 'agent-dev-process:mapper', match: '^Impact', phase: 'impact' },
       { type: 'agent-dev-process:mapper', phase: 'map' },
+      { type: 'agent-dev-process:test-author', phase: 'tasks' },
     ],
     // Subagent description (regex) -> role, for general-purpose subagents.
     roles: [
