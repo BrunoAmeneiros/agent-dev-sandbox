@@ -35,6 +35,7 @@
       "docs/superpowers/specs/2026-11-03-9-spanish-greeting-need.md": "sha256:ed2904813fc4aa9ba1f54f9a1f5dad3ebd5178f5dd9d96db1ef8e2b5ebeb975d",
       "docs/superpowers/specs/2026-11-09-16-lang-equals-syntax-design.md": "sha256:8e962668707b99e7c222db8903598dbab2ade405ad05d186e2651802dc0f6fc5",
       "docs/superpowers/specs/2026-11-09-16-lang-equals-syntax-need.md": "sha256:a8bd31d06db5d0b35fdac8e76a40855e3f139d7d266b11c70bc96dffdcf3be41",
+      "docs/superpowers/specs/2026-11-14-18-restore-help-option-need.md": "sha256:ffec25bf826972fa5ec9f6dbb24fcc6e28fe4dd5b897beacfcb883be971074c5",
       "src/test/java/sandbox/GreetingCliCharacterizationTest.java": "sha256:236c97cc6324726b5142be4e0724a1750c7df4154fc2e293bdccb176cef2d47c",
       "src/test/java/sandbox/GreetingCliOptionsCharacterizationTest.java": "sha256:1d0a0c6b4e662eaf12d6b2d813ff6656b3429e07954f563590139ddce8ab0b9e",
       "tests/acceptance/FlagAsNameAcceptanceTest.java": "sha256:24926c511aefb8045ded0fa7b6d68f7d574a6d7620f2832e0929fd6a201c806d",
