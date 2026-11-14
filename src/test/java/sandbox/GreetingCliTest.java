@@ -17,6 +17,14 @@ class GreetingCliTest {
   private static final String UNKNOWN = " (supported: --lang <code>, --lang=<code>, --shout)";
   private static final String UNKNOWN_LANG = " (supported: en, es)";
   private static final String MISSING_VALUE = "Missing value for --lang (supported: en, es)";
+  private static final String HELP =
+      String.join(
+          "\n",
+          "Usage: greet <name> [--shout] [--lang <code> | --lang=<code>] [--help]",
+          "  --shout          print the greeting in upper case",
+          "  --lang <code>    language of the greeting: en, es (default en)",
+          "  --lang=<code>    same as --lang <code>",
+          "  --help           show this help");
   private static final String HELLO_ANA_ES = "\u00a1Hola, Ana!";
 
   private static void assertResult(
@@ -354,5 +362,71 @@ class GreetingCliTest {
   @Test
   void trailingLangAfterLangEqualsIsMissingValue() {
     assertResult("", MISSING_VALUE, 2, false, run("Ana", "--lang=es", "--lang"));
+  }
+
+  @Test
+  void helpAloneShowsHelp() {
+    assertResult(HELP, "", 0, false, run("--help"));
+  }
+
+  @Test
+  void helpAfterNameShowsHelp() {
+    assertResult(HELP, "", 0, false, run("Ana", "--help"));
+  }
+
+  @Test
+  void helpWinsOverUnknownOptionAfterName() {
+    assertResult(HELP, "", 0, false, run("Ana", "--foo", "--help"));
+  }
+
+  @Test
+  void helpWinsOverUnknownLanguage() {
+    assertResult(HELP, "", 0, false, run("Ana", "--lang", "xx", "--help"));
+  }
+
+  @Test
+  void helpWinsOverNameNotFirst() {
+    assertResult(HELP, "", 0, false, run("--lang", "es", "--help"));
+  }
+
+  @Test
+  void helpWinsOverUnknownFirstOption() {
+    assertResult(HELP, "", 0, false, run("--foo", "--help"));
+  }
+
+  @Test
+  void helpWinsOverShout() {
+    assertResult(HELP, "", 0, false, run("Ana", "--shout", "--help"));
+  }
+
+  @Test
+  void helpWithSpanishIsNotUtf8() {
+    assertResult(HELP, "", 0, false, run("Ana", "--lang", "es", "--help"));
+  }
+
+  @Test
+  void helpAfterConsumedLangShowsHelp() {
+    assertResult(HELP, "", 0, false, run("Ana", "--lang", "--lang", "--help"));
+  }
+
+  @Test
+  void paddedHelpFirstShowsHelp() {
+    assertResult(HELP, "", 0, false, run("  --help  ", "Ana"));
+  }
+
+  @Test
+  void helpAsLangValueWithEmptyNameIsMissingName() {
+    assertResult("", "Missing name" + HINT, 2, false, run("", "--lang", "--help"));
+  }
+
+  @Test
+  void helpAsValueOfPaddedLangIsNameNotFirst() {
+    assertResult(
+        "", "The name must come first, got: --lang" + HINT, 2, false, run("  --lang  ", "--help"));
+  }
+
+  @Test
+  void upperCaseHelpIsUnknownOption() {
+    assertResult("", "Unknown option: --HELP" + UNKNOWN, 2, false, run("Ana", "--HELP"));
   }
 }
