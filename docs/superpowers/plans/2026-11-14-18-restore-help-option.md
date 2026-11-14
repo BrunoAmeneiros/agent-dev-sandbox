@@ -66,12 +66,12 @@ These inputs are not rows of the design. Each follows from the help rule and is 
 - Consumes: nothing.
 - Produces: the baseline counts for the controller's report.
 
-- [ ] **Step 1: Run the characterization tests**
+- [x] **Step 1: Run the characterization tests**
 
 Run: `mvn -B test -Dtest=GreetingCliHelpCharacterizationTest`
 Expected: `Tests run: 11, Failures: 0, Errors: 0`
 
-- [ ] **Step 2: Run the acceptance tests**
+- [x] **Step 2: Run the acceptance tests**
 
 Run: `mvn -B verify -Pacceptance -Dit.test='HelpOption*AcceptanceTest'`
 Expected: `HelpOptionGuardsAcceptanceTest` 3 run, 0 failures. `HelpOptionAcceptanceTest` 6 run, 6 failures (`Unknown option: --help` and exit 2 instead of the help; `opsNoteExists`: the note is missing).
