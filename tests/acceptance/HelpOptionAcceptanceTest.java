@@ -108,5 +108,10 @@ class HelpOptionAcceptanceTest {
     assertTrue(Files.isRegularFile(note), "ops note exists");
     String text = Files.readString(note, StandardCharsets.UTF_8);
     assertTrue(text.contains("2026-11-09-16-unknown-options.md"), "refers to the Feature 16 note");
+    assertTrue(text.contains("Hoy"), "table has the Hoy column");
+    assertTrue(text.contains("Ahora"), "table has the Ahora column");
+    assertTrue(text.contains("`--help`") || text.contains("| --help"), "lists the call --help");
+    assertTrue(text.contains("Ana --help"), "lists the call Ana --help");
+    assertTrue(text.contains("Unknown option: --help"), "gives the previous message");
   }
 }
