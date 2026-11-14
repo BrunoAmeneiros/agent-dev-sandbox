@@ -102,7 +102,7 @@ Expected: `HelpOptionGuardsAcceptanceTest` 3 run, 0 failures. `HelpOptionAccepta
 - Consumes: nothing from other Tasks.
 - Produces: `private static final String HELP_TEXT` in `GreetingCli`. The signatures of `run`, `main` and `CliResult` do not change.
 
-- [ ] **Step 1: Write the failing unit tests**
+- [x] **Step 1: Write the failing unit tests**
 
 In `GreetingCliTest`, add `private static final String HELP = String.join("\n", <the five lines of HELP_TEXT from Global Constraints>);`. Then add these tests, each using the existing `assertResult(stdout, stderr, exitCode, utf8, run(...))`:
 
@@ -122,12 +122,12 @@ In `GreetingCliTest`, add `private static final String HELP = String.join("\n", 
 | `helpAsValueOfPaddedLangIsNameNotFirst` | `run("  --lang  ", "--help")` | `"", "The name must come first, got: --lang" + HINT, 2, false` |
 | `upperCaseHelpIsUnknownOption` | `run("Ana", "--HELP")` | `"", "Unknown option: --HELP" + UNKNOWN, 2, false` |
 
-- [ ] **Step 2: Run them to verify they fail**
+- [x] **Step 2: Run them to verify they fail**
 
 Run: `mvn -B test -Dtest=GreetingCliTest`
 Expected: the 10 help tests fail with `Unknown option: --help`, an unknown language or a name error instead of the help. The last three already pass and stay as guards.
 
-- [ ] **Step 3: Implement the help rule in `GreetingCli`**
+- [x] **Step 3: Implement the help rule in `GreetingCli`**
 
 - Add `HELP = "--help"` and `HELP_TEXT` (exact text from Global Constraints, joined with `"\n"`) and a `private static CliResult help()` returning `new CliResult(HELP_TEXT, "", 0, false)`.
 - `isUnknownOption(String)` also returns `false` for `HELP`.
@@ -135,22 +135,22 @@ Expected: the 10 help tests fail with `Unknown option: --help`, an unknown langu
 - `firstArgumentResult(name, args)`: first of all, return `help()` if `HELP.equals(name)`, or if some `args[i]` (`i ≥ 1`) equals `HELP` and the previous argument (`name` for `i == 1`, `args[i - 1]` otherwise) is not exactly `LANG`. Then the existing logic, unchanged.
 - Update the Javadoc of the class, `main` and `run`: `--help` in any position prints the help with exit 0 and wins over every error, unless it is the value of `--lang`.
 
-- [ ] **Step 4: Run the unit tests and the characterization tests**
+- [x] **Step 4: Run the unit tests and the characterization tests**
 
 Run: `mvn -B test`
 Expected: `BUILD SUCCESS`, 0 failures. That includes `GreetingCliHelpCharacterizationTest` (11), `GreetingCliCharacterizationTest`, `GreetingCliOptionsCharacterizationTest` and the new `GreetingCliTest` methods.
 
-- [ ] **Step 5: Run the acceptance tests**
+- [x] **Step 5: Run the acceptance tests**
 
 Run: `mvn -B verify -Pacceptance -Dit.test='HelpOption*AcceptanceTest'`
 Expected: `HelpOptionGuardsAcceptanceTest` 3/0. `HelpOptionAcceptanceTest`: 6 run, only `opsNoteExists` fails (Task 3).
 
-- [ ] **Step 6: Lint**
+- [x] **Step 6: Lint**
 
 Run: `mvn -B checkstyle:check spotbugs:check`
 Expected: `BUILD SUCCESS`
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add src/main/java/sandbox/GreetingCli.java src/test/java/sandbox/GreetingCliTest.java
