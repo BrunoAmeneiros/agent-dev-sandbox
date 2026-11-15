@@ -6,7 +6,13 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
 
-/** Command line entry point: prints a greeting, in English or Spanish. */
+/**
+ * Command line entry point: prints a greeting, in English or Spanish.
+ *
+ * <p>{@code --help} in any position prints the help with exit code 0 and wins over every error
+ * (unknown option or language, missing or misplaced name), unless it is the value of {@code
+ * --lang}.
+ */
 public final class GreetingCli {
 
   private static final String USAGE = "Usage: greet <name> [--shout] [--lang en|es]";
@@ -17,6 +23,15 @@ public final class GreetingCli {
   private static final String LANG = "--lang";
   private static final String LANG_EQUALS = "--lang=";
   private static final String SHOUT = "--shout";
+  private static final String HELP = "--help";
+  private static final String HELP_TEXT =
+      String.join(
+          "\n",
+          "Usage: greet <name> [--shout] [--lang <code> | --lang=<code>] [--help]",
+          "  --shout          print the greeting in upper case",
+          "  --lang <code>    language of the greeting: en, es (default en)",
+          "  --lang=<code>    same as --lang <code>",
+          "  --help           show this help");
   private static final int ERROR_EXIT_CODE = 2;
 
   private GreetingCli() {}
@@ -38,7 +53,9 @@ public final class GreetingCli {
    *     --lang=en|es}; any other argument after the name starting with {@code --} is an unknown
    *     option (an error); a first argument starting with {@code --} is not a name and prints the
    *     usage text (an error when {@code --lang} or {@code --lang=} is present, or when it is
-   *     itself an unknown option, or when a later argument is an unknown option)
+   *     itself an unknown option, or when a later argument is an unknown option); {@code --help}
+   *     in any position prints the help (exit 0) and wins over every error, unless it is the value
+   *     of {@code --lang}
    */
   public static void main(String[] args) {
     CliResult result = run(args);
@@ -65,8 +82,12 @@ public final class GreetingCli {
    *
    * <p>After the name, {@code --lang <code>} and {@code --lang=<code>} choose the language (the
    * last one wins and the value is taken as is) and {@code --shout} shouts. Any other argument
-   * starting with {@code --} is an unknown option and fails with exit code 2; words not starting
-   * with {@code --} are ignored.
+   * starting with {@code --} is an unknown option and fails with exit code 2; {@code --shout}
+   * shouts and {@code --help} shows the help. Words not starting with {@code --} are ignored.
+   *
+   * <p>An argument equal to {@code --help} (the first one after {@code strip}, the rest exactly)
+   * prints the help with exit code 0 and wins over every error, unless it is the value of {@code
+   * --lang}.
    *
    * @param args the command line arguments
    * @return what to print and how to end
@@ -84,6 +105,7 @@ public final class GreetingCli {
     int langPos = -1;
     String unknown = null;
     int unknownPos = -1;
+    boolean help = false;
     for (int i = 1; i < args.length; i++) {
       String arg = args[i];
       if (isLang(arg)) {
@@ -101,12 +123,17 @@ public final class GreetingCli {
         if (value != null) {
           code = value;
         }
+      } else if (HELP.equals(arg)) {
+        help = true;
       } else if (SHOUT.equals(arg)) {
         shout = true;
       } else if (arg.startsWith("--") && unknown == null) {
         unknown = arg;
         unknownPos = i;
       }
+    }
+    if (help) {
+      return help();
     }
     Optional<Language> language = Language.fromCode(code);
     if (langError == null && language.isEmpty()) {
@@ -128,6 +155,9 @@ public final class GreetingCli {
   }
 
   private static CliResult firstArgumentResult(String name, String[] args) {
+    if (HELP.equals(name) || hasHelpOutsideLangValue(name, args)) {
+      return help();
+    }
     if (isUnknownOption(name)) {
       return unknownOption(name);
     }
@@ -148,12 +178,28 @@ public final class GreetingCli {
     return new CliResult(USAGE, "", 0, false);
   }
 
+  private static boolean hasHelpOutsideLangValue(String name, String[] args) {
+    for (int i = 1; i < args.length; i++) {
+      // only the first argument is stripped, so for i == 1 the previous one is the stripped name;
+      // from i == 2 on, args[i - 1] is compared exactly, on purpose
+      String previous = i == 1 ? name : args[i - 1];
+      if (HELP.equals(args[i]) && !LANG.equals(previous)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private static CliResult help() {
+    return new CliResult(HELP_TEXT, "", 0, false);
+  }
+
   private static boolean isLang(String arg) {
     return LANG.equals(arg) || arg.startsWith(LANG_EQUALS);
   }
 
   private static boolean isUnknownOption(String arg) {
-    return arg.startsWith("--") && !SHOUT.equals(arg) && !isLang(arg);
+    return arg.startsWith("--") && !SHOUT.equals(arg) && !HELP.equals(arg) && !isLang(arg);
   }
 
   private static CliResult unknownOption(String option) {
