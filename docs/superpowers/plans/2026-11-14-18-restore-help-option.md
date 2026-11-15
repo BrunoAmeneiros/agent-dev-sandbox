@@ -176,19 +176,19 @@ git commit -m "feat: --help shows the help (Feature 18)"
 - Consumes: the help behaviour from Task 2 (for the note's "Ahora" column).
 - Produces: nothing.
 
-- [ ] **Step 1: Run the test to verify it fails**
+- [x] **Step 1: Run the test to verify it fails**
 
 Run: `mvn -B verify -Pacceptance -Dit.test=HelpOptionAcceptanceTest`
 Expected: `opsNoteExists` fails with `ops note exists`.
 
-- [ ] **Step 2: Write `docs/changes/2026-11-14-18-help-option.md`** with the content listed in the acceptance criteria.
+- [x] **Step 2: Write `docs/changes/2026-11-14-18-help-option.md`** with the content listed in the acceptance criteria.
 
-- [ ] **Step 3: Run all tests**
+- [x] **Step 3: Run all tests**
 
 Run: `mvn -B verify -Pacceptance`
 Expected: `BUILD SUCCESS`, 0 failures: unit tests, characterization tests and all acceptance tests, including both `HelpOption*AcceptanceTest` classes.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add docs/changes/2026-11-14-18-help-option.md
