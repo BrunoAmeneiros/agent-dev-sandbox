@@ -82,8 +82,8 @@ public final class GreetingCli {
    *
    * <p>After the name, {@code --lang <code>} and {@code --lang=<code>} choose the language (the
    * last one wins and the value is taken as is) and {@code --shout} shouts. Any other argument
-   * starting with {@code --} is an unknown option and fails with exit code 2; words not starting
-   * with {@code --} are ignored.
+   * starting with {@code --} is an unknown option and fails with exit code 2; {@code --shout}
+   * shouts and {@code --help} shows the help. Words not starting with {@code --} are ignored.
    *
    * <p>An argument equal to {@code --help} (the first one after {@code strip}, the rest exactly)
    * prints the help with exit code 0 and wins over every error, unless it is the value of {@code
@@ -180,6 +180,8 @@ public final class GreetingCli {
 
   private static boolean hasHelpOutsideLangValue(String name, String[] args) {
     for (int i = 1; i < args.length; i++) {
+      // only the first argument is stripped, so for i == 1 the previous one is the stripped name;
+      // from i == 2 on, args[i - 1] is compared exactly, on purpose
       String previous = i == 1 ? name : args[i - 1];
       if (HELP.equals(args[i]) && !LANG.equals(previous)) {
         return true;
